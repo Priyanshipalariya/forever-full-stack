@@ -1,6 +1,5 @@
 import React from 'react'
 import { Title } from '../Components/Title'
-import { assets } from '../assets/assets'
 
 
 const Contact = () => {
@@ -11,7 +10,7 @@ const Contact = () => {
       </div>
 
       <div className='my-10 flex justify-center items-center  gap-10 mb-28'>
-        <img className='w-[50%] max-w-[350px]' src={assets.contact_img} />
+        <img className='w-[50%] max-w-[350px]' src= 'https://res.cloudinary.com/dfelqef5x/image/upload/v1751818216/xxks99phqpxijxmgyrrz.png' />
         <div className='flex flex-col justify-center items-start gap-6 '>
           <p className = 'font-semibold text-xl text-gray-600'>Our Store</p>
           <p className='text-gray-500'>1235 XYZ Building<br/>ABC, Pune, India</p>
