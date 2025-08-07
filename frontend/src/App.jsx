@@ -13,6 +13,8 @@ import Product from './Pages/Product'
 import Profile from './Pages/Profile'
 import { Footer } from './Components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
+import Delivery from './Pages/Delivery';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -33,7 +35,8 @@ const App = () => {
         <Route path = "/place-order" element = {<PlaceOrder />} />
         <Route path = "/orders" element = {<Orders />} />
         <Route path = "/profile" element = {<Profile />} />
-
+        <Route path = "/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path = "/delivery" element={<Delivery />} />
       </Routes>
       
       <Footer/>

@@ -46,7 +46,18 @@ const Orders = () => {
         <Title text1={'MY'} text2={'ORDERS'} />
       </div>
 
-      <div>
+      {orderData.length === 0 ? (
+        <div className="text-center text-gray-500 py-10">
+          <p className='mb-8'>
+          You haven’t placed any orders yet.<br />
+          Start shopping and your orders will appear here!
+          </p>
+
+          <a href="/collections" className="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-600 transition">
+            Browse Collections
+          </a>
+        </div>
+      ) : (<div>
         {
           orderData.map((item, index) => (
             <div key={index} className='py-4 border-t border-gray-300 border-b text-gray-700 flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
@@ -76,7 +87,7 @@ const Orders = () => {
             </div>
           ))
         }
-      </div>
+      </div>)}
 
     </div>
   )

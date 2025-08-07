@@ -1,5 +1,6 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
     return (
@@ -8,17 +9,17 @@ export const Footer = () => {
                 <div>
                     <img src={assets.logo} className='mb-5 w-32' />
                     <p className='w-full md:w-2/3 text-gray-600'>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae labore rerum aspernatur dolore. Eum vitae quod tempore ipsa porro, maiores amet unde officiis distinctio quis necessitatibus architecto expedita obcaecati ratione!
+                        Forever is your go-to destination for the latest trends and timeless styles. We are committed to quality, comfort, and customer satisfaction—making every shopping experience memorable.
                     </p>
                 </div>
 
                 <div>
                     <p className='text-xl font-medium mb-5'>COMPANY</p>
                     <ul className='flex flex-col gap-1 text-gray-600'>
-                        <li>Home</li>
-                        <li>About Us</li>
-                        <li>Delivery</li>
-                        <li>Privacy Policy</li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/about">About Us</Link></li>
+                        <li><Link to="/delivery">Delivery</Link></li>
+                        <li><Link to="/privacy-policy">Privacy Policy</Link></li>
                     </ul>
                 </div>
 
