@@ -19,7 +19,7 @@ const ShopContextProvider = (props) => {
     const addToCart = async (itemId, size) => {
         let cartData = structuredClone(cartItems);
         if (!size) {
-            toast.error('Select Product Size');
+            toast.error('Please select a product size before adding to cart.');
             return;
         }
 
@@ -35,6 +35,7 @@ const ShopContextProvider = (props) => {
             cartData[itemId][size] = 1;
         }
         setCartItems(cartData);
+        toast.success('Added to cart!')
 
         if (token) {
             try {
@@ -69,10 +70,10 @@ const ShopContextProvider = (props) => {
             if (response.data.success) {
                 setProducts(response.data.products);
             } else {
-                toast.error(response.data.message);
+                toast.error(response.data.message || "Unable to fetch products. Please try again later.");
             }
         } catch (error) {
-            toast.error(error.message);
+            toast.error(error.message || "Unable to load products. Please check your connection.");
         }
     }
 
@@ -84,7 +85,7 @@ const ShopContextProvider = (props) => {
             }
         } catch (error) {
             console.log(error)
-            toast.error(error.message)
+            toast.error(error.message || "Unable to fetch your cart. Please try again later.");
         }
     }
 
@@ -108,7 +109,7 @@ const ShopContextProvider = (props) => {
                 await axios.post(backendUrl + '/api/cart/update', { itemId, size, quantity }, { headers: { token } })
             } catch (error) {
                 console.log(error)
-                toast.error(error.message)
+                toast.error(error.message || "Unable to update cart quantity. Please try again.");
             }
         }
     }

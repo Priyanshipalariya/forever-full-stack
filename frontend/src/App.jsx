@@ -15,6 +15,7 @@ import { Footer } from './Components/Footer'
 import { ToastContainer, toast } from 'react-toastify';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
 import Delivery from './Pages/Delivery';
+import ScrollToTop from './Components/ScrollToTop';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -22,8 +23,20 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL
 const App = () => {
   return (
     <div className = "px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] ">
-      <ToastContainer/>
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <Navbar/>
+      <ScrollToTop />
       <Routes>
         <Route path = "/" element = {<Home />} />
         <Route path = "/collections" element = {<Collections />} />

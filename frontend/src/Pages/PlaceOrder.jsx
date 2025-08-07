@@ -60,9 +60,10 @@ const PlaceOrder = () => {
                     const response = await axios.post(backendUrl + '/api/order/place', orderData, { headers: { token } })
                     if (response.data.success) {
                         setCartItems({});
+                        toast.success('Your order has been placed! Thank you for shopping with us. 🎉')
                         navigate('/orders')
                     } else {
-                        toast.error(response.data.message)
+                        toast.error("You need to be logged in to place an order.")
                     }
                     break;
 
@@ -72,7 +73,7 @@ const PlaceOrder = () => {
 
         } catch (error) {
             console.error('Order submission error:', error)
-            toast.error(error.message)
+            toast.error("Sorry, we couldn't place your order. Please try again later.")
         }
     }
 

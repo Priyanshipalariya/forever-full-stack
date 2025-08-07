@@ -3,6 +3,7 @@ import { assets } from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { ShopContext } from '../Context/ShopContext'
+import { toast } from 'react-toastify'
 
 export const Navbar = () => {
     const [visible, setVisible] = useState(false);
@@ -13,7 +14,7 @@ export const Navbar = () => {
         localStorage.removeItem('token')
         setToken('')
         setCartItems({})
-       
+        toast.success('Logged out successfully!')
     }
      return (
         <div className="flex items-center justify-between py-5 font-medium">

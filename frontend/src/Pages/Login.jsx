@@ -19,8 +19,9 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
+          toast.success('Logged in successfully!')
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.message || "Registration failed. Please try again.");
         }
 
       } else {
@@ -28,12 +29,13 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
+          toast.success('Logged in successfully!')
         } else {
-          toast.error(response.data.message);
+          toast.error(response.data.message || "Login failed. Please check your credentials.");
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Something went wrong. Please try again.");
     }
   }
 
