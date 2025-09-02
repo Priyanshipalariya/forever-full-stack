@@ -14,6 +14,7 @@ const ShopContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
     const [products, setProducts] = useState([]);
     const [token, setToken] = useState('');
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
     const addToCart = async (itemId, size) => {
@@ -89,6 +90,18 @@ const ShopContextProvider = (props) => {
         }
     }
 
+    const getUserProfile = async (token) => {
+        try {
+            const response = await axios.post(backendUrl + '/api/user/profile', {}, { headers: { token } })
+            if (response.data.success) {
+                setUser(response.data.user)
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message || "Unable to fetch user profile. Please try again later.");
+        }
+    }
+
     useEffect(() => {
         getProductsData();
     }, [products]);
@@ -97,6 +110,7 @@ const ShopContextProvider = (props) => {
         if ((!token && localStorage.getItem('token'))) {
             setToken(localStorage.getItem('token'))
             getUserCart(localStorage.getItem('token'))
+            getUserProfile(localStorage.getItem('token'))
         }
     }, [])
 
@@ -132,7 +146,7 @@ const ShopContextProvider = (props) => {
     }
 
     const value = {
-        products, currency, delivery_fee, setCartItems, search, showSearch, setSearch, setShowSearch, cartItems, addToCart, getCartCount, updateQuantity, getCartAmount, navigate, backendUrl, token, setToken
+        products, currency, delivery_fee, setCartItems, search, showSearch, setSearch, setShowSearch, cartItems, addToCart, getCartCount, updateQuantity, getCartAmount, navigate, backendUrl, token, setToken, user, setUser
     }
 
     return (
