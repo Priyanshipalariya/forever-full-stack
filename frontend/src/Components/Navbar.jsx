@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { assets } from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { useState } from 'react'
@@ -7,7 +7,9 @@ import { toast } from 'react-toastify'
 
 export const Navbar = () => {
     const [visible, setVisible] = useState(false);
+    const [profileDropdown, setProfileDropdown] = useState(false);
     const {getCartCount, navigate, token, setToken, setCartItems} = useContext(ShopContext);
+    const dropdownRef = useRef(null);
     
     const logout = () => {
         navigate('/login')
@@ -16,6 +18,19 @@ export const Navbar = () => {
         setCartItems({})
         toast.success('Logged out successfully!')
     }
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setProfileDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
      return (
         <div className="flex items-center justify-between py-5 font-medium">
             <Link to='/'>
@@ -41,15 +56,26 @@ export const Navbar = () => {
             </ul>
 
             <div className='flex items-center gap-6'>
-                <div className='group relative'>
-                    <img onClick = {() => token ? null : navigate('/login')} src={assets.profile_icon} className='w-5 cursor-pointer' alt='' />
+                <div className='group relative' ref={dropdownRef}>
+                    <img 
+                        onClick = {() => {
+                            if (token) {
+                                setProfileDropdown(!profileDropdown);
+                            } else {
+                                navigate('/login');
+                            }
+                        }} 
+                        src={assets.profile_icon} 
+                        className='w-5 cursor-pointer' 
+                        alt='' 
+                    />
                     {/*------------ Dropdown menu ----------*/}
                     {token &&
-                    <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-                        <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                            <p onClick = {() => navigate('/profile')}className='cursor-pointer hover:text-black'>My Profile</p>
-                            <p onClick = {() => navigate('/orders')} className='cursor-pointer hover:text-black'>Orders</p>
-                            <p onClick = {logout} className='cursor-pointer hover:text-black'>Logout</p>
+                    <div className={`${profileDropdown ? 'block' : 'hidden'} sm:group-hover:block absolute dropdown-menu right-0 pt-4 z-50`}>
+                        <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-lg">
+                            <p onClick = {() => {navigate('/profile'); setProfileDropdown(false);}} className='cursor-pointer hover:text-black'>My Profile</p>
+                            <p onClick = {() => {navigate('/orders'); setProfileDropdown(false);}} className='cursor-pointer hover:text-black'>Orders</p>
+                            <p onClick = {() => {logout(); setProfileDropdown(false);}} className='cursor-pointer hover:text-black'>Logout</p>
                         </div>
                     </div>}
                 </div>
