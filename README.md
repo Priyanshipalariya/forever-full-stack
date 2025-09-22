@@ -41,3 +41,15 @@ This project is built using the MERN stack and other modern technologies:
 * **Styling**: Tailwind CSS 
 
 ---
+
+## 📸 Screenshots
+
+Here's a gallery of the key features and pages within the "Forever" application.
+
+| Homepage | Collections Page | Product Page |
+| :---: | :---: | :---: |
+| ![Homepage](./assets/homepage%20ss.png) | ![Collections Page](./assets/collections%20ss.png) | ![Product Description](./assets/product%20description.png) |
+| **Bestsellers** | **Shopping Cart** | **Checkout** |
+| ![Bestsellers](./assets/bestseller%20ss.png) | ![Shopping Cart](./assets/cart.png) | ![Checkout](./assets/checkout.png) |
+| **Order Page** | **About Us Page** | |
+| ![Order Page](./assets/orderpage.png) | ![About Us Page](./assets/about%20ss.png) | |
