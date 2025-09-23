@@ -16,6 +16,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import PrivacyPolicy from './Pages/PrivacyPolicy';
 import Delivery from './Pages/Delivery';
 import ScrollToTop from './Components/ScrollToTop';
+import NotFoundPage from './Pages/NotFoundPage'
+import ResetPassword from './Pages/ResetPassword'
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
@@ -49,7 +51,9 @@ const App = () => {
         <Route path = "/orders" element = {<Orders />} />
         <Route path = "/profile" element = {<Profile />} />
         <Route path = "/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path = "/forget-password" element = {<ResetPassword/>}/>
         <Route path = "/delivery" element={<Delivery />} />
+        <Route path = "*" element = {<NotFoundPage/>}/>   
       </Routes>
       
       <Footer/>
