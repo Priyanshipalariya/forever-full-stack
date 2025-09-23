@@ -17,7 +17,20 @@ connectCloudinary()
 
 //Middlewares
 app.use(express.json())
-app.use(cors())
+
+const allowedOrigins = ["http://localhost:5173", "https://forever-frontend-lyart.vercel.app/"];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, origin);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 
 //api endpoints
 app.use('/api/user', userRouter)
