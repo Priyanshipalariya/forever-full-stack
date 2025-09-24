@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Title } from '../Components/Title'
 import { CartTotal } from '../Components/CartTotal'
-import { assets } from '../assets/assets'
 import { ShopContext } from '../Context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -29,38 +28,6 @@ const PlaceOrder = () => {
         setFormData(data => ({ ...data, [name]: value }))
     }
 
-    const initPay = (order) => {
-        const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-            amount: order.amount,
-            currency: order.currency,
-            name: 'Order Payment',
-            description: 'Payment for your order',
-            order_id: order.id,
-            receipt: order.receipt,
-            handler: async (response) => {
-                console.log(response)
-                try {
-                    const {data} = await axios.post(backendUrl + '/api/order/verifyRazorpay', response, {headers: {token}})
-                    if(data.success){
-                        setCartItems({});
-                        toast.success('Your order has been placed! Thank you for shopping with us. 🎉')
-                        navigate('/orders')
-                    }else{
-                        toast.error(data.message)
-                    }
-
-                } catch (error) {
-                    console.log(error);
-                    toast.error(error.message)
-                }
-            }
-
-        }
-
-        const razorpay = new window.Razorpay(options)
-        razorpay.open()
-    }
 
     const initCashfreeCheckout = async (paymentSessionId) => {
         const mode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
@@ -119,13 +86,7 @@ const PlaceOrder = () => {
                     break;
 
 
-                case 'razorpay':
-                    const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, { headers: { token } })
-                    if (responseRazorpay.data.success) {
-                        initPay(responseRazorpay.data.order);
-
-                    }
-                    break;
+                
 
                 case 'cashfree':
                     // map formData to email/phone expected by backend
@@ -208,11 +169,6 @@ const PlaceOrder = () => {
                     <Title text1={'PAYMENT'} text2={'OPTIONS'} />
                     {/*----- Payment options------- */}
                     <div className='flex gap-3 flex-col lg:flex-row'>
-                       
-                        <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border border-gray-200 p-2 px-3 cursor-pointer'>
-                            <p className={`min-w-3.5 h-3.5 border rounded-full text-gray-400 ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
-                            <img className='h-5 mx-4' src={assets.razorpay_logo} />
-                        </div>
                         <div onClick={() => setMethod('cashfree')} className='flex items-center gap-3 border border-gray-200 p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full text-gray-400 ${method === 'cashfree' ? 'bg-green-400' : ''}`}></p>
                             <p className='text-gray-500 text-sm font-medium mx-4'>CASHFREE</p>

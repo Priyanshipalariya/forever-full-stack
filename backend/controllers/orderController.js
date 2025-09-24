@@ -195,7 +195,11 @@ export const verifyCashfreePayment = async (req, res) => {
         });
 
         if (data?.order_status === 'PAID') {
-            await orderModel.findByIdAndUpdate(order_id, { payment: true });
+            const updated = await orderModel.findByIdAndUpdate(order_id, { payment: true }, { new: true });
+            // clear user's cart after successful payment
+            if (updated?.userId) {
+                await userModel.findByIdAndUpdate(updated.userId, { cartData: {} });
+            }
             return res.json({ success: true, status: data?.order_status });
         }
         return res.json({ success: false, status: data?.order_status });
@@ -271,7 +275,10 @@ export const cashfreeWebhook = async (req, res) => {
         }
 
         if (orderId && isPaid) {
-            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            const updated = await orderModel.findByIdAndUpdate(orderId, { payment: true }, { new: true });
+            if (updated?.userId) {
+                await userModel.findByIdAndUpdate(updated.userId, { cartData: {} });
+            }
         }
 
         // Always 200 to acknowledge
