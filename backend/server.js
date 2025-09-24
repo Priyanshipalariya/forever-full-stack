@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 import 'dotenv/config'
 import connectDB from './config/mongodb.js';
 import connectCloudinary from './config/cloudinary.js';
@@ -16,9 +17,11 @@ connectDB()
 connectCloudinary()
 
 //Middlewares
+// Use raw body for webhook verification on Cashfree route only
+app.use('/api/order/cashfree/webhook', bodyParser.raw({ type: '*/*' }))
 app.use(express.json())
 
-const allowedOrigins = ["http://localhost:5173", "https://forever-frontend-lyart.vercel.app"];
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173,https://forever-frontend-lyart.vercel.app").split(',').map(s => s.trim()).filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {

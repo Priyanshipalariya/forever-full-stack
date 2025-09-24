@@ -230,7 +230,13 @@ export const cashfreeWebhook = async (req, res) => {
         const signatureHeader = req.headers['x-webhook-signature'] || req.headers['x-webhook-signature'.toLowerCase()];
         const secret = process.env.CASHFREE_WEBHOOK_SECRET;
         const rawBody = Buffer.isBuffer(req.body) ? req.body : Buffer.from(req.body || '');
-        const payload = JSON.parse(rawBody.toString('utf8'));
+        let payload;
+        try {
+            payload = JSON.parse(rawBody.toString('utf8'));
+        } catch (e) {
+            // Sometimes Cashfree sends already-parsed JSON via proxies
+            payload = typeof req.body === 'object' ? req.body : {};
+        }
 
         // Try to extract order_id and payment status from multiple possible shapes
         const orderId = payload?.data?.order?.order_id || payload?.data?.order_id || payload?.order?.order_id || payload?.order_id;
