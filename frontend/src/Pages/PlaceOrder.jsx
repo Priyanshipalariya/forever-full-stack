@@ -62,6 +62,24 @@ const PlaceOrder = () => {
         razorpay.open()
     }
 
+    const initCashfreeCheckout = async (paymentSessionId) => {
+        const mode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
+        const cashfree = window.Cashfree?.({ mode });
+        if (!cashfree) {
+            toast.error('Cashfree SDK not loaded');
+            return;
+        }
+        try {
+            await cashfree.checkout({
+                paymentSessionId,
+                redirectTarget: '_self'
+            });
+        } catch (err) {
+            console.error(err);
+            toast.error('Payment cancelled or failed');
+        }
+    }
+
     const onSubmitHandler = async (e) => {
         e.preventDefault()
         try {
@@ -106,6 +124,37 @@ const PlaceOrder = () => {
                     if (responseRazorpay.data.success) {
                         initPay(responseRazorpay.data.order);
 
+                    }
+                    break;
+
+                case 'cashfree':
+                    // map formData to email/phone expected by backend
+                    const cfResponse = await axios.post(backendUrl + '/api/order/cashfree/create', { ...orderData, email: formData.email, phone: formData.phone }, { headers: { token } })
+                    if (cfResponse.data.success) {
+                        const sessionId = cfResponse.data.cashfree?.payment_session_id;
+                        if (!sessionId) {
+                            toast.error('Missing payment session id');
+                            return;
+                        }
+                        await initCashfreeCheckout(sessionId);
+                        // After redirection/return, verify by polling API (simple approach)
+                        try {
+                            const orderId = cfResponse.data.order?._id;
+                            if (orderId) {
+                                const verifyRes = await axios.post(backendUrl + '/api/order/cashfree/verify', { order_id: orderId }, { headers: { token } })
+                                if (verifyRes.data.success) {
+                                    setCartItems({});
+                                    toast.success('Your order has been placed! 🎉')
+                                    navigate('/orders')
+                                } else {
+                                    toast.error('Payment not completed');
+                                }
+                            }
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    } else {
+                        toast.error('Failed to initiate Cashfree order')
                     }
                     break;
 
@@ -163,6 +212,10 @@ const PlaceOrder = () => {
                         <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border border-gray-200 p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full text-gray-400 ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
                             <img className='h-5 mx-4' src={assets.razorpay_logo} />
+                        </div>
+                        <div onClick={() => setMethod('cashfree')} className='flex items-center gap-3 border border-gray-200 p-2 px-3 cursor-pointer'>
+                            <p className={`min-w-3.5 h-3.5 border rounded-full text-gray-400 ${method === 'cashfree' ? 'bg-green-400' : ''}`}></p>
+                            <p className='text-gray-500 text-sm font-medium mx-4'>CASHFREE</p>
                         </div>
                         <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border border-gray-200 p-2 px-3 cursor-pointer'>
                             <p className={`min-w-3.5 h-3.5 border rounded-full text-gray-400 ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
