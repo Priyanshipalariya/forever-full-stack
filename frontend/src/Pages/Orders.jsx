@@ -7,12 +7,15 @@ const Orders = () => {
 
   const { backendUrl, token, currency } = useContext(ShopContext);
 
-  const [orderData, setOrderData] = useState([])
+  const [orderData, setOrderData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const loadOrderData = async () => {
     try {
+      setLoading(true);
 
       if (!token) {
+        setLoading(false);
         return null
       }
 
@@ -30,9 +33,10 @@ const Orders = () => {
         })
         setOrderData(allOrdersItem.reverse())
       }
+      setLoading(false);
 
     } catch (error) {
-
+      setLoading(false);
     }
   }
 
@@ -46,10 +50,14 @@ const Orders = () => {
         <Title text1={'MY'} text2={'ORDERS'} />
       </div>
 
-      {orderData.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      ) : orderData.length === 0 ? (
         <div className="text-center text-gray-500 py-10">
           <p className='mb-8'>
-          You haven’t placed any orders yet.<br />
+          You haven't placed any orders yet.<br />
           Start shopping and your orders will appear here!
           </p>
 

@@ -12,7 +12,8 @@ const Collections = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
-  const [sortType, setSortType] = useState('relevant')
+  const [sortType, setSortType] = useState('relevant');
+  const [loading, setLoading] = useState(true);
 
   const { setShowSearch } = useContext(ShopContext);
 
@@ -70,7 +71,12 @@ const Collections = () => {
   }
 
   useEffect(() => {
-    setFilterProducts(products);
+    if (products && products.length > 0) {
+      setFilterProducts(products);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
   }, [products])
 
   useEffect(() => {
@@ -154,13 +160,19 @@ const Collections = () => {
         </div>
 
         {/* Map products */}
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-          {
-            filterProducts.map((item, index) => (
-              <ProductItem key={index} id={item._id} name={item.name} price={item.price} image={item.image} />
-            ))
-          }
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+          </div>
+        ) : (
+          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
+            {
+              filterProducts.map((item, index) => (
+                <ProductItem key={index} id={item._id} name={item.name} price={item.price} image={item.image} />
+              ))
+            }
+          </div>
+        )}
       </div>
 
     </div>
